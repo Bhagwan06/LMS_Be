@@ -1,4 +1,4 @@
-@rootUrl = http://localhost:8000/
+@rootUrl = http://localhost:8000
 
 
 # API List
@@ -6,3 +6,28 @@
 ### Check server status
 
 GET {{rootUrl}}
+
+### Auth API 
+
+### POST new user
+POST {{rootUrl}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "fName": "iop88",
+    "lName": "Magar",
+    "email": "t@a.com",
+    "phone": "0450638999",
+    "password": "qwerty"
+}
+
+### POST to activate user
+POST {{rootUrl}}/api/v1/auth/activate-user
+Content-Type: application/json
+
+{
+    "sessionId":"681abb4a8649898a3388835b",
+    "t": "9d2ed3ef-c96d-4eab-9d34-2b551be911d3"
+}
+
+
