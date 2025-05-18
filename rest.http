@@ -31,3 +31,21 @@ Content-Type: application/json
 }
 
 
+###  login user
+POST {{rootUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "email":"t@a.com",
+    "password": "qwerty"
+}
+
+###  get user profile
+GET  {{rootUrl}}/api/v1/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRAYS5jb20iLCJpYXQiOjE3NDc0NDkyMTcsImV4cCI6MTc0NzQ1MDExN30.P94CxB-5zd-i08OsX5yDoKyeDOSK0viJvAwtYqhDTlA
+
+### Renew accessJWT
+
+GET {{rootUrl}}/api/v1/auth/renew-jwt
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRAYS5jb20iLCJpYXQiOjE3NDc0NDc0MDksImV4cCI6MTc1MDAzOTQwOX0.xJrbWlh5zmOwC7T8QEy00-7bTGGwGYUaaWXqRuwOoQg
+

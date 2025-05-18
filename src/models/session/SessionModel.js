@@ -5,7 +5,17 @@ export const createNewSession = (sessionObj) => {
   return SessionSchema(sessionObj).save();
 };
 
-// delete new user
-export const deleteNewSession = (filter) => {
+// delete  session
+export const deleteSession = (filter) => {
   return SessionSchema.findOneAndDelete(filter);
+};
+
+// get user
+export const getSession = (filter) => {
+  return SessionSchema.findOne(filter);
+};
+
+// delete many session
+export const deleteManySessions = (filter) => {
+  return SessionSchema.deleteMany(filter);
 };

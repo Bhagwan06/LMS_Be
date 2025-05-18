@@ -1,15 +1,21 @@
 import { responseClient } from "../middleware/responseClient.js";
 import {
   createNewSession,
-  deleteNewSession,
+  deleteManySessions,
+  deleteSession,
 } from "../models/session/SessionModel.js";
-import { createNewUser, updateUser } from "../models/user/userModel.js";
+import {
+  createNewUser,
+  getUserByEmail,
+  updateUser,
+} from "../models/user/UserModel.js";
 import {
   userActivatedNotificationEmail,
   userActivationUrlEmail,
 } from "../services/emailService.js";
-import { hashPassword } from "../utils/bcrypt.js";
+import { comparePassword, hashPassword } from "../utils/bcrypt.js";
 import { v4 as uuidv4 } from "uuid";
+import { getJwts } from "../utils/jwt.js";
 
 export const insertNewUser = async (req, res, next) => {
   try {
@@ -62,7 +68,7 @@ export const activateUser = async (req, res, next) => {
   try {
     const { sessionId, t } = req.body;
 
-    const session = await deleteNewSession({
+    const session = await deleteSession({
       _id: sessionId,
       token: t,
     });
@@ -97,17 +103,43 @@ export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     // get user by email
-    console.log(email, password);
+    const user = await getUserByEmail(email);
 
-    // compare password
+    if (user?._id) {
+      // compare password
 
-    // create jwts
+      const isPassMatch = comparePassword(password, user.password);
 
-    // response jwts
+      if (isPassMatch) {
+        // create jwts
+        const jwts = await getJwts(email);
+        // response jwts
+        return responseClient({
+          req,
+          res,
+          message: "Login Successful!",
+          payload: jwts,
+        });
+      }
+    }
 
-    const message = "Invalid link or token expired!";
-    const statusCode = 400;
+    const message = "Invalid login details!";
+    const statusCode = 401;
     responseClient({ req, res, message, statusCode });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logoutUser = async (req, res, next) => {
+  try {
+    // get the token
+    const { email } = req.userInfo;
+    // update refreshJWT TO ""
+    await updateUser({ email }, { refreshJWT: "" });
+    // remove the accessJWT from session table
+    await deleteManySessions({ association: email });
+    responseClient({ req, res, message: "you are logged out!" });
   } catch (error) {
     next(error);
   }
